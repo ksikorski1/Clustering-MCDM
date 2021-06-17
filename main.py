@@ -41,7 +41,13 @@ def main():
     print("Adjusted Rand index german dbscan: %.2f" %results[0][1][2])
     print("Adjusted Rand index german Ward: %.2f" %results[0][2][2])
     
-    
+    print("\n\n")
+    #for res in results:
+    #    for var in res:
+    #        if (var > 1.0):
+    #            print(res)
+    for res in results:
+        print(res)
     topsis = MCDM.group_topsis(results, alternative_names, benefit_list)
     wsm = MCDM.group_wsm(results, alternative_names)
 

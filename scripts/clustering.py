@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 from sklearn.cluster import KMeans, DBSCAN, AgglomerativeClustering
-from sklearn.metrics import rand_score, fowlkes_mallows_score, davies_bouldin_score, adjusted_rand_score, jaccard_score
+from sklearn.metrics import rand_score, fowlkes_mallows_score, davies_bouldin_score, adjusted_rand_score, jaccard_score, silhouette_score
 import scipy.cluster.hierarchy as shc
 import matplotlib.pyplot as plt
 
@@ -18,24 +18,34 @@ class Clustering():
         return clustering_res
     
     @staticmethod
-    def dbscan(dataframe, true, min_pts = 5):
+    def dbscan(dataframe, true, min_pts = 5, max_cluster_count = 10):
         i = 0.5
-        score = 0
+        score = 100
+        score2 = -1
         clustering_res = []
         epsilon = 0
+        temp_score = 99
+        temp_score2 = 99
         while  (i < 12.0):
             clustering_temp = DBSCAN(eps = i, min_samples= min_pts).fit_predict(dataframe)
-            temp_score = Clustering.compute_adjusted_rand_score(true, clustering_temp)
             uniq_labels = np.unique(clustering_temp)
-            if temp_score > score and len(uniq_labels) > 2:
-                clustering_res = clustering_temp
-                score = temp_score
-                epsilon = i
+            if len(uniq_labels) > 2 and len(uniq_labels) < max_cluster_count:
+                temp_score = Clustering.compute_davies_bouldin(dataframe, clustering_temp)
+                print("Davies Boulding score: %.4f" %score)
+                temp_score2 = Clustering.compute_silhouette_score(dataframe, clustering_temp)
+                if temp_score2 > score2:
+                    if temp_score < score:
+                        clustering_res = clustering_temp
+                        score = temp_score
+                        score2 = temp_score2
+                        epsilon = i
             i+=0.1
         
         uniq_labels = np.unique(clustering_res)
         print("Epsilon = %.2f" %epsilon)
         print("DBSCAN Number of clusters: " + str(len(uniq_labels)))
+        print("Davies Boulding score: %.4f" %score)
+        print("Silhouette score: %.4f" %score2)
         print(uniq_labels)
         return clustering_res
     
@@ -62,6 +72,10 @@ class Clustering():
         return (davies_bouldin_score(dataset, clustering))
     
     @staticmethod
+    def compute_silhouette_score(dataset, clustering):
+        return (silhouette_score(dataset, clustering))
+    
+    @staticmethod
     def compute_adjusted_rand_score(true, pred):
         return (adjusted_rand_score(true, pred))
     
@@ -77,7 +91,6 @@ class Clustering():
         result.append(Clustering.compute_fowlkes_mallows(true, pred))            
         result.append(Clustering.compute_adjusted_rand_score(true, pred))
         result.append(Clustering.compute_jaccard_score(true, pred))
-        #result.append(Clustering.compute_davies_bouldin(data, pred))
 
         return result
 
