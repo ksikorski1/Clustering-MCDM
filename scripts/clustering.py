@@ -2,6 +2,9 @@ import pandas as pd
 import numpy as np
 from sklearn.cluster import KMeans, DBSCAN, AgglomerativeClustering
 from sklearn.metrics import rand_score, fowlkes_mallows_score, davies_bouldin_score, adjusted_rand_score, jaccard_score
+import scipy.cluster.hierarchy as shc
+import matplotlib.pyplot as plt
+
 from .preprocessing import Preprocessor
 
 class Clustering():
@@ -40,6 +43,11 @@ class Clustering():
     def wards_method(data, n):
         clustering_res = AgglomerativeClustering(n_clusters=n, linkage='ward').fit_predict(data)
         return clustering_res
+    
+    @staticmethod
+    def draw_dendrogram(data):
+        dend = shc.dendrogram(shc.linkage(data, method='ward'))
+        return dend
 
     @staticmethod
     def compute_rand_index(true, pred):
@@ -86,7 +94,7 @@ class DataClustering(Clustering):
         kMeansResult_temp =  0
         wardResult_temp = 0
         prev_kmeans = []
-        prev_ward = []
+        prev_ward = 0
         k1 = 0
         k2 = 0
         for i in range(2, 8):
@@ -95,17 +103,19 @@ class DataClustering(Clustering):
             wardResult_temp = DataClustering.wards_method(data, i)
 
             kmeans_temp = DataClustering.compute_all_external_metrics(data, breastcancer, kMeansResult_temp)
-            ward_temp = DataClustering.compute_all_external_metrics(data, breastcancer, wardResult_temp)
+            #ward_temp = DataClustering.compute_all_external_metrics(data, breastcancer, wardResult_temp)
+            ward_temp = DataClustering.compute_adjusted_rand_score(breastcancer, wardResult_temp)
 
             if (sum(kmeans_temp) > sum(prev_kmeans)):
                 kMeansResult = kMeansResult_temp
                 prev_kmeans = kmeans_temp
                 k1 = i
-            if (sum(ward_temp) > sum(prev_ward)):
+            if (ward_temp) > (prev_ward):
                 wardResult = wardResult_temp
                 prev_ward = ward_temp
                 k2 = i
-        print("klastrow: ", k1, k2)
+        print("KMeans clusters: ", k1)
+        print("Ward clusters:", k2)
 
         dbscanResult = DataClustering.dbscan(data, breastcancer)
 
@@ -144,7 +154,8 @@ class DataClustering(Clustering):
                 wardResult = wardResult_temp
                 prev_ward = ward_temp
                 k2 = i
-        print("klastrow: ", k1, k2)
+        print("KMeans clusters: ", k1)
+        print("Ward clusters:", k2)
 
         dbscanResult = DataClustering.dbscan(data, creditability, min_pts = 3)
 
@@ -188,7 +199,12 @@ class DataClustering(Clustering):
                 wardResult = wardResult_temp
                 prev_ward = ward_temp
                 k2 = i
-        print("klastrow: ", k1, k2)
+        print("KMeans clusters: ", k1)
+        print("Ward clusters:", k2)
+
+        dend = Clustering.draw_dendrogram(data)
+        plt.show()
+
         measures.append(DataClustering.compute_all_external_metrics(data, glass_type, kMeansResult))
         measures.append(DataClustering.compute_all_external_metrics(data, glass_type, dbscanResult))
         measures.append(DataClustering.compute_all_external_metrics(data, glass_type, wardResult))

@@ -30,7 +30,17 @@ def main():
     alternative_names = ['KMeans', 'DBScan', "Ward"]
     benefit_list = [True, True, True, True]
 
-    #print(results[2])
+    #1. Rand index 2. Fowlkes Mallows 3. Adjusted Rand Index (HA) 4. Jaccard
+
+
+    print("Rand index breast cancer KMeans: %.2f" %results[0][0][0])
+    print("Rand index german dbscan: %.2f" %results[0][1][0])
+    print("Rand index german Ward: %.2f" %results[0][2][0])
+
+    print("Adjusted Rand index german KMeans: %.2f" %results[0][0][2])
+    print("Adjusted Rand index german dbscan: %.2f" %results[0][1][2])
+    print("Adjusted Rand index german Ward: %.2f" %results[0][2][2])
+    
     
     topsis = MCDM.group_topsis(results, alternative_names, benefit_list)
     wsm = MCDM.group_wsm(results, alternative_names)
