@@ -31,7 +31,6 @@ class Clustering():
             uniq_labels = np.unique(clustering_temp)
             if len(uniq_labels) > 2 and len(uniq_labels) < max_cluster_count:
                 temp_score = Clustering.compute_davies_bouldin(dataframe, clustering_temp)
-                print("Davies Boulding score: %.4f" %score)
                 temp_score2 = Clustering.compute_silhouette_score(dataframe, clustering_temp)
                 if temp_score2 > score2:
                     if temp_score < score:
@@ -93,6 +92,36 @@ class Clustering():
         result.append(Clustering.compute_jaccard_score(true, pred))
 
         return result
+    
+    @staticmethod
+    def compute_best_clustering(data):
+        kMeansResult_temp =  0
+        wardResult_temp = 0
+        prev_kmeans = 0
+        prev_ward = 0
+        k1 = -1
+        k2 = -1
+        for i in range(2, 8):
+
+            kMeansResult_temp = DataClustering.kmeans(data, i)
+            wardResult_temp = DataClustering.wards_method(data, i)
+
+            kmeans_temp = DataClustering.compute_silhouette_score(data, kMeansResult_temp)
+            ward_temp = DataClustering.compute_silhouette_score(data, wardResult_temp)
+
+            if (kmeans_temp) > (prev_kmeans):
+                kMeansResult = kMeansResult_temp
+                prev_kmeans = kmeans_temp
+                k1 = i
+            if (ward_temp) > (prev_ward):
+                wardResult = wardResult_temp
+                prev_ward = ward_temp
+                k2 = i
+        print("KMeans clusters: ", k1)
+        print("Ward clusters:", k2)
+
+        return kMeansResult, wardResult
+
 
 class DataClustering(Clustering):
 
@@ -104,31 +133,7 @@ class DataClustering(Clustering):
         breastcancer = data['class']
         data = data.drop('class', axis=1)
 
-        kMeansResult_temp =  0
-        wardResult_temp = 0
-        prev_kmeans = []
-        prev_ward = 0
-        k1 = 0
-        k2 = 0
-        for i in range(2, 8):
-
-            kMeansResult_temp = DataClustering.kmeans(data, i)
-            wardResult_temp = DataClustering.wards_method(data, i)
-
-            kmeans_temp = DataClustering.compute_all_external_metrics(data, breastcancer, kMeansResult_temp)
-            #ward_temp = DataClustering.compute_all_external_metrics(data, breastcancer, wardResult_temp)
-            ward_temp = DataClustering.compute_adjusted_rand_score(breastcancer, wardResult_temp)
-
-            if (sum(kmeans_temp) > sum(prev_kmeans)):
-                kMeansResult = kMeansResult_temp
-                prev_kmeans = kmeans_temp
-                k1 = i
-            if (ward_temp) > (prev_ward):
-                wardResult = wardResult_temp
-                prev_ward = ward_temp
-                k2 = i
-        print("KMeans clusters: ", k1)
-        print("Ward clusters:", k2)
+        kMeansResult, wardResult = DataClustering.compute_best_clustering(data)
 
         dbscanResult = DataClustering.dbscan(data, breastcancer)
 
@@ -145,30 +150,7 @@ class DataClustering(Clustering):
         creditability = data['Creditability']
         data = data.drop('Creditability', axis=1)
 
-        kMeansResult_temp =  0
-        wardResult_temp = 0
-        prev_kmeans = []
-        prev_ward = []
-        k1 = 0
-        k2 = 0
-        for i in range(2, 8):
-
-            kMeansResult_temp = DataClustering.kmeans(data, i)
-            wardResult_temp = DataClustering.wards_method(data, i)
-
-            kmeans_temp = DataClustering.compute_all_external_metrics(data, creditability, kMeansResult_temp)
-            ward_temp = DataClustering.compute_all_external_metrics(data, creditability, wardResult_temp)
-
-            if (sum(kmeans_temp) > sum(prev_kmeans)):
-                kMeansResult = kMeansResult_temp
-                prev_kmeans = kmeans_temp
-                k1 = i
-            if (sum(ward_temp) > sum(prev_ward)):
-                wardResult = wardResult_temp
-                prev_ward = ward_temp
-                k2 = i
-        print("KMeans clusters: ", k1)
-        print("Ward clusters:", k2)
+        kMeansResult, wardResult = DataClustering.compute_best_clustering(data)
 
         dbscanResult = DataClustering.dbscan(data, creditability, min_pts = 3)
 
@@ -189,34 +171,7 @@ class DataClustering(Clustering):
 
         dbscanResult = DataClustering.dbscan(data, glass_type, min_pts = 5)
         
-        kMeansResult_temp =  0
-        wardResult_temp = 0
-        prev_kmeans = []
-        prev_ward = []
-        k1 = 0
-        k2 = 0
-        for i in range(2, 8):
-
-            kMeansResult_temp = DataClustering.kmeans(data, i)
-            wardResult_temp = DataClustering.wards_method(data, i)
-
-            kmeans_temp = DataClustering.compute_all_external_metrics(data, glass_type, kMeansResult_temp)
-            ward_temp = DataClustering.compute_all_external_metrics(data, glass_type, wardResult_temp)
-
-            if (sum(kmeans_temp) > sum(prev_kmeans)):
-                kMeansResult = kMeansResult_temp
-                prev_kmeans = kmeans_temp
-                k1 = i
-            if (sum(ward_temp) > sum(prev_ward)):
-                #print(ward_temp, prev_ward)
-                wardResult = wardResult_temp
-                prev_ward = ward_temp
-                k2 = i
-        print("KMeans clusters: ", k1)
-        print("Ward clusters:", k2)
-
-        dend = Clustering.draw_dendrogram(data)
-        plt.show()
+        kMeansResult, wardResult = DataClustering.compute_best_clustering(data)
 
         measures.append(DataClustering.compute_all_external_metrics(data, glass_type, kMeansResult))
         measures.append(DataClustering.compute_all_external_metrics(data, glass_type, dbscanResult))
