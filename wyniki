@@ -1,0 +1,131 @@
+GROUP TOPSIS:
+{'KMeans': 0.6941739980263663, 'Lloyd': 0.6427917464490142, 'fuzzy': 0.6679411298040239, 'gaussian mixture': 0.7090443229727513, 'DBScan': 0.3030320993243118, 'optics': 0.30256621962228847, 'Ward': 0.5110709376502124}
+
+GROUP WSM:
+{'KMeans': 0.48857758275726804, 'Lloyd': 0.47476911733242694, 'fuzzy': 0.47977467026847664, 'gaussian mixture': 0.4869200035671373, 'DBScan': 0.38097527087720967, 'optics': 0.38041907497676597, 'Ward': 0.4331198731381729}
+
+COPRAS Mcdm Method
+{'KMeans': 0.8691511464277761, 'Lloyd': 0.7984810954648073, 'DBScan': 0.5979868422459604, 'Ward': 0.7131945175299288, 'fuzzy': 0.8050202863971556, 'optics': 0.5981941255041957, 'gaussian mixture': 0.8009071525858952}
+
+
+
+TOPSIS Borda Count Method
+{'gaussian mixture': 7, 'KMeans': 6, 'fuzzy': 5, 'Lloyd': 4, 'Ward': 3, 'DBScan': 2, 'optics': 1}
+WSM Borda Count Method
+{'KMeans': 7, 'gaussian mixture': 6, 'fuzzy': 5, 'Lloyd': 4, 'Ward': 3, 'DBScan': 2, 'optics': 1}
+COPRAS Borda Count Method
+{'KMeans': 7, 'fuzzy': 6, 'gaussian mixture': 5, 'Lloyd': 4, 'Ward': 3, 'optics': 2, 'DBScan': 1}
+
+
+
+
+
+
+
+
+
+KMeans clusters:  2
+Lloyd clusters:  2
+Ward clusters: 2
+Fuzzy clustering: 2
+Epsilon = 1.7000
+DBSCAN Number of clusters: 3
+Davies Boulding score: 0.8934
+Silhouette score: 0.2303
+[-1  0  1]
+Epsilon = 1.7000
+OPTICS Number of clusters: 3
+Davies Boulding score: 0.8934
+Silhouette score: 0.2303
+[-1  0  1]
+done breast-cancer-wisconsin.data
+
+
+
+KMeans clusters:  2
+Lloyd clusters:  2
+Ward clusters: 2
+Fuzzy clustering: 2
+Epsilon = 9.2000
+DBSCAN Number of clusters: 3
+Davies Boulding score: 0.9714
+Silhouette score: -0.3617
+[-1  0  1]
+Epsilon = 9.2000
+OPTICS Number of clusters: 3
+Davies Boulding score: 0.9722
+Silhouette score: -0.3636
+[-1  0  1]
+done german_credit_data.csv
+
+
+
+KMeans clusters:  4
+Lloyd clusters:  3
+Ward clusters: 4
+Fuzzy clustering: 3
+Epsilon = 0.0050
+DBSCAN Number of clusters: 4
+Davies Boulding score: 1.3069
+Silhouette score: 0.1574
+[-1  0  1  2]
+Epsilon = 0.0050
+OPTICS Number of clusters: 4
+Davies Boulding score: 1.2906
+Silhouette score: 0.1399
+[-1  0  1  2]
+done glass.csv
+
+
+
+KMeans clusters:  2
+Lloyd clusters:  2
+Ward clusters: 2
+Fuzzy clustering: 2
+Epsilon = 0.9800
+DBSCAN Number of clusters: 7
+Davies Boulding score: 0.5579
+Silhouette score: -0.0035
+[-1  0  1  2  3  4  5]
+Epsilon = 0.9800
+OPTICS Number of clusters: 7
+Davies Boulding score: 0.5579
+Silhouette score: -0.0035
+[-1  0  1  2  3  4  5]
+done kaggle_Interests_group.csv
+
+
+
+KMeans clusters:  2
+Lloyd clusters:  2
+Ward clusters: 2
+Fuzzy clustering: 2
+Epsilon = 0.0170
+DBSCAN Number of clusters: 3
+Davies Boulding score: 0.4701
+Silhouette score: 0.3428
+[-1  0  1]
+Epsilon = 0.0190
+OPTICS Number of clusters: 3
+Davies Boulding score: 0.5576
+Silhouette score: 0.3888
+[-1  0  1]
+done wine.data
+
+
+
+KMeans clusters:  4
+Lloyd clusters:  4
+Ward clusters: 4
+Fuzzy clustering: 4
+Epsilon = 2.1500
+DBSCAN Number of clusters: 4
+Davies Boulding score: 0.8449
+Silhouette score: 0.3507
+[-1  0  1  2]
+Epsilon = 2.1500
+OPTICS Number of clusters: 4
+Davies Boulding score: 0.8449
+Silhouette score: 0.3507
+[-1  0  1  2]
+done zoo.csv
