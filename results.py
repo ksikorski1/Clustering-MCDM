@@ -12,7 +12,8 @@ def main():
         data = data_loader.readFile(file)
         data = data.round(4)
 
-        data.to_csv(file, index=False)
+        data.to_csv(file, index=False, sep='&')
+        data.to_csv()
     
 
 if __name__ == "__main__":

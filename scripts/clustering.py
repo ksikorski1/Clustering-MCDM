@@ -3,7 +3,8 @@ import numpy as np
 from scipy.sparse import data
 from sklearn.cluster import KMeans, DBSCAN, AgglomerativeClustering, OPTICS
 from sklearn.mixture import GaussianMixture
-from sklearn.metrics import rand_score, fowlkes_mallows_score, davies_bouldin_score, adjusted_rand_score, jaccard_score, silhouette_score
+from sklearn.metrics import rand_score, fowlkes_mallows_score, davies_bouldin_score, adjusted_rand_score, jaccard_score, silhouette_score, multilabel_confusion_matrix
+from sklearn.metrics.cluster import contingency_matrix
 import scipy.cluster.hierarchy as shc
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import MinMaxScaler, Normalizer
@@ -134,7 +135,15 @@ class Clustering():
     
     @staticmethod
     def compute_jaccard_score(true, pred):
-        return (jaccard_score(true, pred, average='weighted'))
+        return (jaccard_score(true, pred, average="macro"))
+    
+    @staticmethod
+    def compute_confusion_matrix(true, pred):
+        return multilabel_confusion_matrix(true, pred)
+    
+    @staticmethod
+    def compute_contingency_matrix(true, pred):
+        return contingency_matrix(true, pred)
     
     @staticmethod
     def compute_all_external_metrics(data, true, pred):
@@ -158,7 +167,7 @@ class Clustering():
         prev_lloyd1 = 50
         prev_ward1 = 50
         prev_fuzzy1 = 50
-        for i in range(2, 10):
+        for i in range(2, 11):
 
             kMeansResult_temp = DataClustering.kmeanspp(data, i)
             lloydResult_temp  = DataClustering.kmeans_lloyd(data, i)
@@ -198,6 +207,15 @@ class Clustering():
                 prev_fuzzy = fuzzy_temp
                 prev_fuzzy1 = fuzzy_temp1
                 k4 = i
+            
+            """
+            print("\n\n\nclusters: ", i)
+            print("Silhouette kmeans: ", np.format_float_positional(kmeans_temp, precision=3))
+            print("Silhouette ward: ", np.format_float_positional(ward_temp, 3))
+
+            print("Davies kmeans:", np.format_float_positional(kmeans_temp1, 3))
+            print("Davies ward: ", np.format_float_positional(ward_temp1, 3))
+            """
 
         print("KMeans clusters: ", k1)
         print("Lloyd clusters: ", k2)
@@ -228,6 +246,29 @@ class Clustering():
         measures.append(DataClustering.compute_all_external_metrics(data, classes, opticsResult))
         measures.append(DataClustering.compute_all_external_metrics(data, classes, gaussianResult))
 
+        wardConfusionMatrix = DataClustering.compute_confusion_matrix(classes, wardResult)
+
+        kmeansConfusionMatrix = DataClustering.compute_confusion_matrix(classes, kMeansResult)
+
+        wardContingency = DataClustering.compute_contingency_matrix(classes, wardResult)
+
+        print("\n\n\nConfusionMatrix Ward: ", wardConfusionMatrix)
+        print("\n\n\n")
+
+        print("\n\n\nConfusionMatrix KMEANS: ", kmeansConfusionMatrix)
+        print("\n\n\n")
+
+
+        numerator = kmeansConfusionMatrix[:, 1, 1]
+        denominator = kmeansConfusionMatrix[:, 1, 1] + kmeansConfusionMatrix[:, 0, 1] + kmeansConfusionMatrix[:, 1, 0]
+
+        print("kmeans licznik i mianownik", numerator, denominator)
+
+        numerator = wardConfusionMatrix[:, 1, 1]
+        denominator = wardConfusionMatrix[:, 1, 1] + wardConfusionMatrix[:, 0, 1] + wardConfusionMatrix[:, 1, 0]
+
+        print(" ward licznik i mianownik", numerator, denominator)
+
         return measures
 
 
@@ -251,7 +292,7 @@ class DataClustering(Clustering):
         creditability = data['Creditability']
         data = data.drop('Creditability', axis=1)
 
-        measures = DataClustering.do_all_clusterings(data, creditability, 5, 2, start=7.05, stop=11.0, gap=0.05)
+        measures = DataClustering.do_all_clusterings(data, creditability, 5, 2, start=7.05, stop=11.0, gap=0.05, scaler=False)
 
         return measures
 

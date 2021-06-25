@@ -1,3 +1,7 @@
+# Program przygotowany w celach pracy magisterskiej
+# Jakub Sikorski
+# Informatyka UG
+
 from timeit import timeit
 
 import pandas
@@ -15,7 +19,7 @@ def main():
 
     results = []
 
-    alternative_names = ['KMeans', 'Lloyd', 'DBScan', "Ward", "fuzzy", "optics", "gaussian mixture"]
+    alternative_names = ['W', 'Lloyd', 'DBScan', "Ward", "fuzzy", "optics", "gaussian mixture"]
     index = ['Rand Index', 'Fowlkes Mallows', 'Adjusted Rand Index HA', 'Jaccard Index']
 
     for file in files:
@@ -28,7 +32,8 @@ def main():
             res = DataClustering.breast_cancer_clustering(data)
             df = pandas.DataFrame(res)
             results.append(res)
-
+            print(results)
+        """
         if file == 'german_credit_data.csv':
             res = DataClustering.german_credit_clustering(data)
             df = pandas.DataFrame(res)
@@ -54,7 +59,7 @@ def main():
             res = DataClustering.people_clustering(data)
             df = pandas.DataFrame(res)
             results.append(res)
-        
+        """
         filename = str(file) + "_results"
         if not df.empty:
             df.to_csv(path_or_buf=filename,  header=index)
@@ -66,7 +71,7 @@ def main():
 
     #1. Rand index 2. Fowlkes Mallows 3. Adjusted Rand Index (HA) 4. Jaccard
 
-    
+    """
     print("ari Rand index breast cancer KMeans: %.2f" %results[0][0][2])
     print("Rand index breast cancer lloyd: %.2f" %results[0][1][2])
     print("Rand index breast cancer dbscan: %.2f" %results[0][2][2])
@@ -106,7 +111,7 @@ def main():
     MCDM.borda_count(wsm)
     print("COPRAS Borda Count Method")
     MCDM.borda_count(copras)
-    
+    """
     
 
 if __name__ == '__main__':
